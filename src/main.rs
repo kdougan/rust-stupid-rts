@@ -55,8 +55,9 @@ fn main() {
         }
 
         // do collisions
-        for i in 0..ents.len() {
-            let ent = ents[i];
+        // for i in 0..ents.len() {
+        //     let ent = ents[i];
+        for (i, ent) in ents.iter_mut().enumerate() {
             let mut acc = Vector2::zero();
             let query_result = grid.query(i, &ent);
             for j in &query_result {
