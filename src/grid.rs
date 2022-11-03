@@ -54,20 +54,20 @@ impl Grid {
         }
     }
 
-    pub fn pos_to_grid_coord(&self, pos: Vector2) -> (usize, usize) {
-        let g_pos = (pos - self.pos) / self.cell_size;
-        return (g_pos.x as usize, g_pos.y as usize);
+    pub fn pos_to_grid_coord(&self, pos: &Vector2) -> (usize, usize) {
+        let g_pos = (*pos - self.pos) / self.cell_size;
+        (g_pos.x as usize, g_pos.y as usize)
     }
 
     pub fn get_coord_boundaries(&self, entity: &Entity) -> GridCoordBounds {
-        let tl = self.pos_to_grid_coord(entity.pos);
-        let br = self.pos_to_grid_coord(entity.get_br());
-        return GridCoordBounds {
+        let tl = self.pos_to_grid_coord(&entity.pos);
+        let br = self.pos_to_grid_coord(&entity.get_br());
+        GridCoordBounds {
             top: max(tl.1, 0),
             bottom: min(br.1, self.height_num_cells as usize - 1),
             left: max(tl.0, 0),
             right: min(br.0, self.width_num_cells as usize - 1),
-        };
+        }
     }
 
     pub fn add(&mut self, id: usize, entity: &Entity) {
@@ -96,8 +96,8 @@ impl Grid {
 
         result.sort();
         result.dedup();
-        return result;
+        result
     }
 
-    pub fn print(&self) {}
+    // pub fn print(&self) {}
 }

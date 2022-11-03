@@ -11,8 +11,8 @@ pub struct Entity {
 impl Entity {
     pub fn new(pos: Vector2, size: Vector2) -> Entity {
         Entity {
-            pos: pos,
-            size: size,
+            pos,
+            size,
             acc: Vector2::zero(),
             vel: Vector2::zero(),
         }
@@ -23,17 +23,17 @@ impl Entity {
         let b = self.get_br();
         let c = other.pos;
         let d = other.get_br();
-        return !(b.x < c.x || a.x > d.x || b.y < c.y || a.y > d.y);
+        !(b.x < c.x || a.x > d.x || b.y < c.y || a.y > d.y)
     }
 
     pub fn get_br(&self) -> Vector2 {
-        return Vector2::new(self.pos.x + self.size.x, self.pos.y + self.size.y);
+        Vector2::new(self.pos.x + self.size.x, self.pos.y + self.size.y)
     }
 
-    pub fn get_center(&self) -> Vector2 {
-        return Vector2::new(
-            self.pos.x + self.size.x / 2.0,
-            self.pos.y + self.size.y / 2.0,
-        );
-    }
+    // pub fn get_center(&self) -> Vector2 {
+    //     return Vector2::new(
+    //         self.pos.x + self.size.x / 2.0,
+    //         self.pos.y + self.size.y / 2.0,
+    //     );
+    // }
 }

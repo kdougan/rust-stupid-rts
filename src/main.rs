@@ -25,8 +25,7 @@ fn main() {
 
     const S: f32 = 20.0;
     const SIZE: Vector2 = Vector2::new(S, S);
-    let mut pos = window_size / 2.0;
-    pos = pos + Vector2::new(-S, -S) / 2.0;
+    let pos = window_center + Vector2::new(-S, -S) / 2.0;
     ents.push(entity::Entity::new(pos, SIZE));
 
     while !rl.window_should_close() {
@@ -79,9 +78,9 @@ fn main() {
         }
 
         for ent in &mut ents {
-            ent.vel = ent.vel + ent.acc * dt;
-            ent.pos = ent.pos + ent.vel * dt;
-            ent.vel = ent.vel * 0.8;
+            ent.vel += ent.acc * dt;
+            ent.pos += ent.vel * dt;
+            ent.vel *= 0.8;
             ent.acc = Vector2::zero();
         }
 
