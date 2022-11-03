@@ -3,9 +3,9 @@ use raylib::prelude::*;
 mod entity;
 mod grid;
 
-const WINDOW_SIZE: Vector2 = Vector2::new(500.0, 500.0);
-const ENTITY_SIZE: Vector2 = Vector2::new(2.0, 2.0);
-const CELL_SIZE: u16 = 5;
+const WINDOW_SIZE: Vector2 = Vector2::new(1000.0, 1000.0);
+const ENTITY_SIZE: Vector2 = Vector2::new(20.0, 20.0);
+const CELL_SIZE: u16 = 20;
 
 fn main() {
     let (mut rl, thread) = raylib::init()
@@ -23,7 +23,7 @@ fn main() {
 
         // if key is down
         if rl.is_key_down(KeyboardKey::KEY_SPACE) {
-            for _ in 0..100 {
+            for _ in 0..1 {
                 ents.push(entity::Entity::new(WINDOW_SIZE * 0.5, ENTITY_SIZE));
             }
         }
@@ -68,7 +68,7 @@ fn main() {
                 ent.pos.x = 0.0;
                 ent.vel.x *= -1.0;
             }
-            if ent.pos.x + ent.size.x > 500.0 {
+            if ent.pos.x + ent.size.x > WINDOW_SIZE.x {
                 ent.pos.x = 500.0 - ent.size.x;
                 ent.vel.x *= -1.0;
             }
@@ -76,13 +76,24 @@ fn main() {
                 ent.pos.y = 0.0;
                 ent.vel.y *= -1.0;
             }
-            if ent.pos.y + ent.size.y > 500.0 {
+            if ent.pos.y + ent.size.y > WINDOW_SIZE.y {
                 ent.pos.y = 500.0 - ent.size.y;
                 ent.vel.y *= -1.0;
             }
         }
 
         let mut d = rl.begin_drawing(&thread);
+
+        // draw the grid cells
+        for pos in grid.get_cells_for_render() {
+            d.draw_rectangle_lines(
+                pos.x as i32,
+                pos.y as i32,
+                CELL_SIZE as i32,
+                CELL_SIZE as i32,
+                Color::new(255, 255, 255, 50),
+            );
+        }
 
         for ent in &ents {
             d.draw_rectangle(
@@ -95,12 +106,7 @@ fn main() {
         }
 
         d.clear_background(Color::new(30, 20, 30, 255));
-        let ent_count_text = format!(
-            "fps: {:?} ents: {:?} gents: {:?}",
-            d.get_fps(),
-            ents.len(),
-            grid.ent_count
-        );
+        let ent_count_text = format!("fps: {:?} ents: {:?}", d.get_fps(), ents.len());
         d.draw_text(&ent_count_text, 13, 13, 20, Color::BLACK);
         d.draw_text(&ent_count_text, 12, 12, 20, Color::RAYWHITE);
     }

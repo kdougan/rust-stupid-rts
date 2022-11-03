@@ -3,7 +3,6 @@ use raylib::prelude::Vector2;
 pub struct Grid {
     cell_size: u16,
     cells: Vec<Vec<Vec<usize>>>,
-    pub ent_count: usize,
 }
 
 impl Grid {
@@ -11,7 +10,6 @@ impl Grid {
         Grid {
             cell_size,
             cells: vec![],
-            ent_count: 0,
         }
     }
 
@@ -21,7 +19,6 @@ impl Grid {
                 col.clear();
             }
         }
-        self.ent_count = 0;
     }
 
     pub fn add(&mut self, ent: usize, pos: Vector2, size: Vector2) {
@@ -29,7 +26,6 @@ impl Grid {
         let high_x: usize = ((pos.x + size.x) as usize) / (self.cell_size as usize);
         let low_y: usize = (pos.y as usize) / (self.cell_size as usize);
         let high_y: usize = ((pos.y + size.y) as usize) / (self.cell_size as usize);
-        let mut pushed = false;
         for y in low_y..=high_y {
             if self.cells.len() <= y {
                 self.cells.resize(y + 100, vec![]);
@@ -39,11 +35,7 @@ impl Grid {
                     self.cells[y].resize(x + 100, vec![]);
                 }
                 self.cells[y][x].push(ent);
-                pushed = true;
             }
-        }
-        if pushed {
-            self.ent_count += 1;
         }
     }
 
@@ -64,6 +56,21 @@ impl Grid {
                 self.cells[y][x].iter_mut().for_each(|ent| {
                     result.push(*ent);
                 });
+            }
+        }
+        result
+    }
+
+    pub fn get_cells_for_render(&self) -> Vec<Vector2> {
+        let mut result: Vec<Vector2> = vec![];
+        for y in 0..self.cells.len() {
+            for x in 0..self.cells[y].len() {
+                if self.cells[y][x].len() > 0 {
+                    result.push(Vector2::new(
+                        x as f32 * self.cell_size as f32,
+                        y as f32 * self.cell_size as f32,
+                    ));
+                }
             }
         }
         result
