@@ -6,12 +6,12 @@ use crate::entity::Entity;
 use raylib::prelude::*;
 use std::cmp::{max, min};
 
-pub struct Grid {
+pub struct Grid<'entity> {
     pub pos: Vector2,
     pub size: Vector2,
     pub width_num_cells: u32,
     pub height_num_cells: u32,
-    pub cells: Vec<Vec<Vec<usize>>>,
+    pub cells: Vec<Vec<Vec<&'entity Entity>>>,
     pub cell_size: Vector2,
 }
 
@@ -23,7 +23,7 @@ pub struct GridCoordBounds {
     right: usize,
 }
 
-impl Grid {
+impl<'entity> Grid<'entity> {
     pub fn new(
         pos: Vector2,
         size: Vector2,
@@ -70,26 +70,26 @@ impl Grid {
         }
     }
 
-    pub fn add(&mut self, id: usize, entity: &Entity) {
+    pub fn add(&mut self, entity: &'entity Entity) {
         let b = self.get_coord_boundaries(entity);
         for y in b.top..=b.bottom {
             for x in b.left..=b.right {
-                self.cells[y][x].push(id);
+                self.cells[y][x].push(entity);
             }
         }
     }
 
-    pub fn query(&self, id: usize, entity: &Entity) -> Vec<usize> {
+    pub fn query(&self, entity: &Entity) -> Vec<&Entity> {
         let mut result = Vec::new();
         let b = self.get_coord_boundaries(entity);
 
         for y in b.top..=b.bottom {
             for x in b.left..=b.right {
-                for ent_id in &self.cells[y][x] {
-                    let ent_id = *ent_id;
-                    if ent_id != id {
-                        result.push(ent_id);
+                for other in &self.cells[y][x] {
+                    if entity == *other {
+                        continue;
                     }
+                    result.push(*other);
                 }
             }
         }

@@ -10,6 +10,7 @@ mod entity;
 mod grid;
 
 fn main() {
+    let mut next_uuid = 0;
     let window_size = Vector2::new(800.0, 600.0);
     let window_center: Vector2 = window_size / 2.0;
 
@@ -20,7 +21,7 @@ fn main() {
 
     rl.set_target_fps(60);
 
-    let mut ents: Vec<entity::Entity> = Vec::new();
+    let mut ents: Vec<&entity::Entity> = Vec::new();
     const GRID_DENSITY: u32 = 16;
     let mut grid = grid::Grid::new(
         Vector2::new(0.0, 0.0),
@@ -32,7 +33,9 @@ fn main() {
     const S: f32 = 20.0;
     const SIZE: Vector2 = Vector2::new(S, S);
     let pos = window_center + Vector2::new(-S, -S) / 2.0;
-    ents.push(entity::Entity::new(pos, SIZE));
+    let e = &entity::Entity::new(next_uuid, pos, SIZE);
+    ents.push(e);
+    next_uuid += 1;
 
     while !rl.window_should_close() {
         let dt = rl.get_frame_time();
@@ -40,7 +43,9 @@ fn main() {
         // if key is down
         if rl.is_key_down(KeyboardKey::KEY_SPACE) {
             for _ in 0..100 {
-                ents.push(entity::Entity::new(window_size / 2.0, SIZE));
+                let e = &entity::Entity::new(next_uuid, window_size / 2.0, SIZE);
+                ents.push(e);
+                next_uuid += 1;
             }
         }
 
@@ -50,26 +55,21 @@ fn main() {
 
         // add entities to grid
         grid.clear();
-        for (i, ent) in ents.iter().enumerate() {
-            grid.add(i, ent);
+        for ent in ents {
+            grid.add(&ent);
         }
 
         // do collisions
         // for i in 0..ents.len() {
         //     let ent = ents[i];
-        for (i, ent) in ents.iter_mut().enumerate() {
+        for ent in ents.iter_mut() {
             let mut acc = Vector2::zero();
-            let query_result = grid.query(i, &ent);
-            for j in &query_result {
-                let j = *j;
-                if i == (j) {
+            let query_result = grid.query(&ent);
+            for other in query_result {
+                if !ent.collides_with(*other) {
                     continue;
                 }
-                let oth = ents[j];
-                if !ent.collides_with(oth) {
-                    continue;
-                }
-                let mut v = oth.pos - ent.pos;
+                let mut v = other.pos - ent.pos;
                 if v.length() == 0.0 {
                     v = Vector2::new(
                         rand::random::<f32>() * 2.0 - 1.0,
@@ -78,10 +78,7 @@ fn main() {
                 }
                 acc += v.normalized() * -50.0;
             }
-            {
-                let mut ent = &mut ents[i];
-                ent.acc = acc;
-            }
+            ent.acc = acc;
         }
 
         for ent in &mut ents {
