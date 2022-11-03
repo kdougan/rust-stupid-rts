@@ -29,13 +29,13 @@ impl Grid {
         size: Vector2,
         mut width_num_cells: u32,
         mut height_num_cells: u32,
-    ) -> Grid {
+    ) -> Self {
         if width_num_cells == 0 || height_num_cells == 0 {
             //  you are a bad person
             width_num_cells = 1;
             height_num_cells = 1;
         }
-        Grid {
+        Self {
             pos,
             size,
             width_num_cells,
@@ -85,7 +85,7 @@ impl Grid {
 
         for y in b.top..=b.bottom {
             for x in b.left..=b.right {
-                for ent_id in self.cells[y][x].iter() {
+                for ent_id in &self.cells[y][x] {
                     let ent_id = *ent_id;
                     if ent_id != id {
                         result.push(ent_id);
@@ -94,7 +94,7 @@ impl Grid {
             }
         }
 
-        result.sort();
+        result.sort_unstable();
         result.dedup();
         result
     }

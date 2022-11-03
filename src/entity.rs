@@ -9,8 +9,8 @@ pub struct Entity {
 }
 
 impl Entity {
-    pub fn new(pos: Vector2, size: Vector2) -> Entity {
-        Entity {
+    pub fn new(pos: Vector2, size: Vector2) -> Self {
+        Self {
             pos,
             size,
             acc: Vector2::zero(),
@@ -18,7 +18,7 @@ impl Entity {
         }
     }
 
-    pub fn collides_with(&self, other: Entity) -> bool {
+    pub fn collides_with(&self, other: Self) -> bool {
         let a = self.pos;
         let b = self.get_br();
         let c = other.pos;

@@ -59,7 +59,7 @@ fn main() {
             let ent = ents[i];
             let mut acc = Vector2::zero();
             let query_result = grid.query(i, &ent);
-            for j in query_result.iter() {
+            for j in &query_result {
                 let j = *j;
                 if i == (j) {
                     continue;
