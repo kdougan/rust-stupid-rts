@@ -46,13 +46,14 @@ fn main() {
         // add entities to grid
         grid.clear();
         for (i, ent) in ents.iter().enumerate() {
-            grid.add(i, *ent);
+            grid.add(i, ent);
         }
 
+        // do collisions
         for i in 0..ents.len() {
             let ent = ents[i];
             let mut acc = Vector2::zero();
-            let query_result = grid.query(i, ent);
+            let query_result = grid.query(i, &ent);
             for j in query_result.iter() {
                 let j = *j;
                 if i == (j) {

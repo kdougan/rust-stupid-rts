@@ -59,7 +59,7 @@ impl Grid {
         return (g_pos.x as usize, g_pos.y as usize);
     }
 
-    pub fn get_coord_boundaries(&self, entity: Entity) -> GridCoordBounds {
+    pub fn get_coord_boundaries(&self, entity: &Entity) -> GridCoordBounds {
         let tl = self.pos_to_grid_coord(entity.pos);
         let br = self.pos_to_grid_coord(entity.get_br());
         return GridCoordBounds {
@@ -70,7 +70,7 @@ impl Grid {
         };
     }
 
-    pub fn add(&mut self, id: usize, entity: Entity) {
+    pub fn add(&mut self, id: usize, entity: &Entity) {
         let b = self.get_coord_boundaries(entity);
         for y in b.top..=b.bottom {
             for x in b.left..=b.right {
@@ -79,7 +79,7 @@ impl Grid {
         }
     }
 
-    pub fn query(&self, id: usize, entity: Entity) -> Vec<usize> {
+    pub fn query(&self, id: usize, entity: &Entity) -> Vec<usize> {
         let mut result = Vec::new();
         let b = self.get_coord_boundaries(entity);
 
