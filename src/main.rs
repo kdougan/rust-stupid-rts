@@ -1,11 +1,13 @@
 use raylib::prelude::*;
 
+mod btgrid;
 mod entity;
-mod grid;
 
 const WINDOW_SIZE: Vector2 = Vector2::new(1000.0, 1000.0);
-const ENTITY_SIZE: Vector2 = Vector2::new(20.0, 20.0);
-const CELL_SIZE: u16 = 20;
+const ENTITY_SIZE: Vector2 = Vector2::new(16.0, 16.0);
+const CELL_SIZE: u16 = 16;
+const SPAWN_RATE: u32 = 10;
+const ESCAPE_ACCEL: f32 = 20.0;
 
 fn main() {
     let (mut rl, thread) = raylib::init()
@@ -13,17 +15,17 @@ fn main() {
         .title("playgorund")
         .build();
 
-    rl.set_target_fps(60);
+    // rl.set_target_fps(60);
 
     let mut ents: Vec<entity::Entity> = Vec::new();
-    let mut grid = grid::Grid::new(CELL_SIZE);
+    let mut grid = btgrid::Grid::new(CELL_SIZE);
 
     while !rl.window_should_close() {
         let dt = rl.get_frame_time();
 
         // if key is down
         if rl.is_key_down(KeyboardKey::KEY_SPACE) {
-            for _ in 0..1 {
+            for _ in 0..SPAWN_RATE {
                 ents.push(entity::Entity::new(WINDOW_SIZE * 0.5, ENTITY_SIZE));
             }
         }
@@ -51,7 +53,7 @@ fn main() {
                         rand::random::<f32>() * 2.0 - 1.0,
                     );
                 }
-                ents[i].acc = ent.acc + v.normalized() * -50.0;
+                ents[i].acc = ent.acc + v.normalized() * -ESCAPE_ACCEL;
             }
         }
 
@@ -63,24 +65,24 @@ fn main() {
         }
 
         // keep ents within bounds
-        for ent in &mut ents {
-            if ent.pos.x < 0.0 {
-                ent.pos.x = 0.0;
-                ent.vel.x *= -1.0;
-            }
-            if ent.pos.x + ent.size.x > WINDOW_SIZE.x {
-                ent.pos.x = 500.0 - ent.size.x;
-                ent.vel.x *= -1.0;
-            }
-            if ent.pos.y < 0.0 {
-                ent.pos.y = 0.0;
-                ent.vel.y *= -1.0;
-            }
-            if ent.pos.y + ent.size.y > WINDOW_SIZE.y {
-                ent.pos.y = 500.0 - ent.size.y;
-                ent.vel.y *= -1.0;
-            }
-        }
+        // for ent in &mut ents {
+        //     if ent.pos.x < 0.0 {
+        //         ent.pos.x = 0.0;
+        //         ent.vel.x *= -1.0;
+        //     }
+        //     if ent.pos.x + ent.size.x > WINDOW_SIZE.x {
+        //         ent.pos.x = 500.0 - ent.size.x;
+        //         ent.vel.x *= -1.0;
+        //     }
+        //     if ent.pos.y < 0.0 {
+        //         ent.pos.y = 0.0;
+        //         ent.vel.y *= -1.0;
+        //     }
+        //     if ent.pos.y + ent.size.y > WINDOW_SIZE.y {
+        //         ent.pos.y = 500.0 - ent.size.y;
+        //         ent.vel.y *= -1.0;
+        //     }
+        // }
 
         let mut d = rl.begin_drawing(&thread);
 
