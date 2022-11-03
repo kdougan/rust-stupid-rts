@@ -29,6 +29,7 @@ impl Grid {
         let high_x: usize = ((pos.x + size.x) as usize) / (self.cell_size as usize);
         let low_y: usize = (pos.y as usize) / (self.cell_size as usize);
         let high_y: usize = ((pos.y + size.y) as usize) / (self.cell_size as usize);
+        let mut pushed = false;
         for y in low_y..=high_y {
             if self.cells.len() <= y {
                 self.cells.resize(y + 100, vec![]);
@@ -38,8 +39,11 @@ impl Grid {
                     self.cells[y].resize(x + 100, vec![]);
                 }
                 self.cells[y][x].push(ent);
-                self.ent_count += 1;
+                pushed = true;
             }
+        }
+        if pushed {
+            self.ent_count += 1;
         }
     }
 
@@ -58,18 +62,6 @@ impl Grid {
                     continue;
                 }
                 self.cells[y][x].iter_mut().for_each(|ent| {
-                    result.push(*ent);
-                });
-            }
-        }
-        result
-    }
-
-    pub fn get_entities(&self) -> Vec<usize> {
-        let mut result: Vec<usize> = vec![];
-        for row in &self.cells {
-            for col in row {
-                col.iter().for_each(|ent| {
                     result.push(*ent);
                 });
             }
