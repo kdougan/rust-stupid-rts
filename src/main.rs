@@ -1,4 +1,10 @@
 // use rand;
+#![deny(clippy::all)]
+#![warn(clippy::pedantic)]
+#![warn(clippy::nursery)]
+
+// #![warn(clippy::restriction)]
+// #![warn(clippy::cargo)]
 use raylib::prelude::*;
 mod entity;
 mod grid;
