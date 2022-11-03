@@ -15,7 +15,7 @@ fn main() {
     rl.set_target_fps(60);
 
     let mut ents: Vec<entity::Entity> = Vec::new();
-    const GRID_DENSITY: u32 = 32;
+    const GRID_DENSITY: u32 = 16;
     let mut grid = grid::Grid::new(
         Vector2::new(0.0, 0.0),
         window_size,

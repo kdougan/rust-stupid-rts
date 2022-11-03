@@ -3,6 +3,14 @@
 version = 3
 
 [[package]]
+name = "ECGrid"
+version = "0.1.0"
+dependencies = [
+ "rand",
+ "raylib",
+]
+
+[[package]]
 name = "cc"
 version = "1.0.73"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -109,14 +117,6 @@ dependencies = [
  "cc",
  "cmake",
  "fs_extra",
-]
-
-[[package]]
-name = "tutorial1"
-version = "0.1.0"
-dependencies = [
- "rand",
- "raylib",
 ]
 
 [[package]]
